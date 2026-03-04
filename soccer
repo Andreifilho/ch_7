@@ -1,0 +1,106 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+enum match_result { win, loss, draw };
+
+struct player
+{
+    int player_id;
+    string player_name;
+    int goals;
+};
+
+struct team
+{
+    string team_name;
+    match_result results[3];
+    int total_goals;
+    int points;
+};
+
+int main()
+{
+    player league_players[3][4];
+    team teams[3];
+    int choice;
+
+    for(int i = 0; i < 3; i++)
+    {
+        cout << "Enter Team " << i+1 << " name: ";
+        cin >> teams[i].team_name;
+
+        teams[i].total_goals = 0;
+        teams[i].points = 0;
+    }
+
+    for(int i = 0; i < 3; i++)
+    {
+        cout << "\n--- Enter Players for Team " << teams[i].team_name << " ---\n";
+
+        for(int j = 0; j < 4; j++)
+        {
+            cout << "Player ID: ";
+            cin >> league_players[i][j].player_id;
+
+            cout << "Player Name: ";
+            cin >> league_players[i][j].player_name;
+
+            cout << "Goals Scored: ";
+            cin >> league_players[i][j].goals;
+
+            teams[i].total_goals += league_players[i][j].goals;
+        }
+    }
+
+    for(int i = 0; i < 3; i++)
+    {
+        cout << "\n--- Enter Results for " << teams[i].team_name << " ---\n";
+
+        for(int j = 0; j < 3; j++)
+        {
+            cout << "Match " << j+1 << " (0-win,1-loss,2-draw): ";
+            cin >> choice;
+
+            if(choice == 0)
+                teams[i].results[j] = win;
+            else if(choice == 1)
+                teams[i].results[j] = loss;
+            else
+                teams[i].results[j] = draw;
+
+            if(teams[i].results[j] == win)
+                teams[i].points += 3;
+            else if(teams[i].results[j] == draw)
+                teams[i].points += 1;
+        }
+    }
+
+    int winner = 0;
+
+    for(int i = 1; i < 3; i++)
+    {
+        if(teams[i].points > teams[winner].points ||
+           (teams[i].points == teams[winner].points &&
+            teams[i].total_goals > teams[winner].total_goals))
+        {
+            winner = i;
+        }
+    }
+
+    cout << "\n=========== SOCCER TOURNAMENT REPORT ===========\n";
+
+    for(int i = 0; i < 3; i++)
+    {
+        cout << "\nTeam: " << teams[i].team_name << endl;
+        cout << "Total Goals: " << teams[i].total_goals << endl;
+        cout << "Total Points: " << teams[i].points << endl;
+        cout << "-----------------------------------------------\n";
+    }
+
+    cout << "\nTournament Winner: " << teams[winner].team_name << endl;
+    cout << "Points: " << teams[winner].points
+         << " | Goals: " << teams[winner].total_goals << endl;
+
+    return 0;
+}
